@@ -3,7 +3,7 @@
 
 # Key Sounder
 
-**Key Sounder** is a program that plays sound effects when specific keys (z and x) are pressed, with adjustable volume controls.
+**Key Sounder** is a program that plays sound a sound when specific keys (z and x) are pressed, with adjustable volume controls.
 
 ## How to Use
 ### Running the Executable (`.exe`)
