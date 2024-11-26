@@ -18,6 +18,7 @@ sound_path = os.path.join(base_path, 'sound.wav')
 
 # Initialize pygame mixer for low-latency sound playback
 pygame.mixer.init(frequency=384000, size=-16, channels=2, buffer=0)  # optimize buffer size for low latency
+pygame.mixer.set_num_channels(128)
 
 # Pre-load the sound to avoid delay during playback
 sound = pygame.mixer.Sound(sound_path)
