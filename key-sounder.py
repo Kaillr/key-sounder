@@ -2,8 +2,9 @@ import os
 import sys
 import pygame
 import threading
-from pynput import keyboard
+from pynput import keyboard as pynput_keyboard
 import pygetwindow as gw
+import keyboard as keyboard
 
 # Check if the program is running as a bundled executable
 if getattr(sys, 'frozen', False):
@@ -70,7 +71,7 @@ def on_press(key):
 
     # Only respond to key press if it's not already in the pressed_keys set
     if k not in pressed_keys:
-        if k in ['z', 'x']:  # keys of interest
+        if k in [key_1, key_2]:  # keys of interest
             total_keys_pressed += 1
             print(f'Key pressed: {k} ({total_keys_pressed})')
             threading.Thread(target=play_sound, daemon=True).start()  # Play sound in background with low latency
@@ -82,7 +83,7 @@ def on_press(key):
             pressed_keys.add(k)
 
         if k == 'esc' and is_program_in_focus():  # Stop listener when Escape key is pressed (only when in focus)
-            return False  # Stop listener
+            exit()
 
 def on_release(key):
     try:
@@ -119,11 +120,22 @@ def is_program_in_focus():
         print(f"Error checking focus: {e}")
         return False  # In case of error, assume program is not in focus
 
+def get_keypress(prompt):
+    print(prompt, end='', flush=True)  # Display the prompt without newline
+    key = keyboard.read_event()  # Wait for a key event
+    while key.event_type != 'down':  # Ignore key release events
+        key = keyboard.read_event()
+    print(key.name)  # Print the key name
+    return key.name
+
+key_1 = get_keypress("Key 1: ")
+key_2 = get_keypress("Key 2: ")
+
 # Set up the volume control thread
 volume_thread = threading.Thread(target=volume_control, daemon=True)
 volume_thread.start()
 
 # Set up the listener
-listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+listener = pynput_keyboard.Listener(on_press=on_press, on_release=on_release)
 listener.start()  # Start the listener in a separate thread
 listener.join()
